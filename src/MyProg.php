@@ -1,16 +1,5 @@
 <?php
-/*
-Cílem zadání je navržení a implementace tříd (např. Wallet, Bank, Money, Operation), rozhraní a unit testů pro podporu více měn v hypotetickém
-systému (eshopu).
-Řešení by mělo umět provádět:
-1. základní operace s částkami (sčítání, odčítání, násobení, dělení) např.:
-a. 100 CZK + 1 EUR = 126 CZK při kurzu 26 CZK za 1 EUR
-b. 100 CZK * 5 = 500 CZK
-2. porovnání částek
-3. zaokrouhlování částek
-4. směna měny
-
-*/
+namespace Andrey\PHPTest;
 
 require_once 'Wallet.php';
 
@@ -24,7 +13,7 @@ $rates = [
     "CZK" => 1.0,
 ];
 
-$f = fopen("rates.csv","r");
+$f = fopen("../public/rates.csv", "r");
 if ($f != false) {
     while (!feof($f)) {
         $s = fgets($f, 100);
@@ -35,7 +24,7 @@ if ($f != false) {
             $rates[$a[0]] = $a[1];
         }
     }
-    fclose(($f));    
+    fclose(($f));
 } else {
     echo "rates.csv no found\n";
     return;
@@ -48,7 +37,10 @@ foreach ($rates as $code => $rate) {
 }
 echo "==========================\n";
 
-$wall = new Wallet("Shchukin");
+$wall = new Wallet("Shchukin", $rates);
+
+//$wall->showRates();
+
 echo "Hi, {$wall->owner}!\n";
 echo "=========================\nOperations:\n";
 
@@ -78,18 +70,15 @@ if ($wall->changeCurrByValue("EUR", 8000.0) >= 0) {
 }
 
 echo "=========================\nExchange:\n";
-if ($wall->currencyExchange("EUR", "USD", 3000, $rates["EUR"] / $rates["USD"]) >= 0) {
+
+if ($wall->currencyExchange("EUR", "USD", 3000.0) >= 0) {
     echo "New value EUR {$wall->getCurrValue("EUR")}\n";
     echo "New value USD {$wall->getCurrValue("USD")}\n";
 }
 
+
 echo "=========================\nYour wallet:\n";
-$ballance = 0.0;
-foreach ($wall->getCurrencies() as $curr_id) {
-    $val = $wall->getCurrValue($curr_id);
-    echo "{$curr_id} {$val}\n";
-    $ballance += round($val * $rates[$curr_id], 2);
-}
+$ballance = $wall->getBallance("CZK");
 echo "Total: {$ballance} CZK\n";
 
 ?>

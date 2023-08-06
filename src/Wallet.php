@@ -118,7 +118,7 @@ class Wallet
             $this->accounts[$curr_id] = $res;
             return $res;
         } else {
-            return -1;
+            return -1.0;
         }
     }
 
@@ -143,7 +143,7 @@ class Wallet
         if ($val >= 0 && $this->accounts[$currFrom] - $val > 0) {
             $r = $this->getExchangeRate($currFrom, $currTo);
             if ($r < 0) {
-                return -1;
+                return -1.0;
             }
 
             if (!array_key_exists($currTo, $this->accounts)) {
@@ -153,7 +153,7 @@ class Wallet
             $this->accounts[$currFrom] -= $val;
             return $this->accounts[$currTo];
         } else {
-            return -1;
+            return -1.0;
         }
     }
 
@@ -171,20 +171,15 @@ class Wallet
      */
     function calcExchange(string $currFrom, string $currTo, float $val): float
     {
+        $r = $this->getExchangeRate($currFrom, $currTo);
+        if ($r < 0) {
+            return -1.0;
+        }
         if ($val >= 0) {
-            if (
-                array_key_exists($currFrom, $this->rates) &&
-                array_key_exists($currTo, $this->rates) && $this->rates[$currTo] > 0
-            ) {
-                $r = $this->rates[$currFrom] / $this->rates[$currTo];
-            } else {
-                return -1.0;
-            }
-
             $ret = round($val * $r, 2);
             return $ret;
         } else {
-            return -1;
+            return -1.0;
         }
     }
 

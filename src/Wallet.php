@@ -37,6 +37,27 @@ class Wallet
     }
 
     /**
+     * Summary of getExchangeRate
+     * @param string $CurrFrom
+     * @param string $CurrTo
+     * @return float
+     * 
+     * Return exchange rate two currencies
+     */
+    function getExchangeRate(string $currFrom, string $currTo): float
+    {
+        if (
+            array_key_exists($currFrom, $this->rates) && $this->rates[$currFrom] > 0 &&
+            array_key_exists($currTo, $this->rates) && $this->rates[$currTo] > 0
+        ) {
+            $r = $this->rates[$currFrom] / $this->rates[$currTo];
+        } else {
+            $r = -1.0;
+        }
+        return $r;
+    }
+
+    /**
      * Summary of setCurrValue
      * @param string $curr_id
      * @param float $value
@@ -120,13 +141,9 @@ class Wallet
     function currencyExchange(string $currFrom, string $currTo, float $val): float
     {
         if ($val >= 0 && $this->accounts[$currFrom] - $val > 0) {
-            if (
-                array_key_exists($currFrom, $this->rates) &&
-                array_key_exists($currTo, $this->rates) && $this->rates[$currTo] > 0
-            ) {
-                $r = $this->rates[$currFrom] / $this->rates[$currTo];
-            } else {
-                return -1.0;
+            $r = $this->getExchangeRate($currFrom, $currTo);
+            if ($r < 0) {
+                return -1;
             }
 
             if (!array_key_exists($currTo, $this->accounts)) {

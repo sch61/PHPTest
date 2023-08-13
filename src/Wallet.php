@@ -7,7 +7,7 @@ namespace Andrey\PHPTest;
  */
 class Wallet
 {
-    public string $owner;
+    protected string $owner;
     protected array $accounts;
     protected $rates;
 
@@ -24,6 +24,15 @@ class Wallet
         $this->owner = $name;
         $this->rates = &$rates;
         $this->accounts["CZK"] = 0.0;
+    }
+
+    /**
+     * Summary of getOwner
+     * @return string
+     */
+    public function getOwner(): string
+    {
+        return $this->owner;
     }
 
     /**
@@ -153,7 +162,7 @@ class Wallet
             $this->accounts[$currFrom] -= $val;
             return $this->accounts[$currTo];
         } else {
-            return -1.0;
+            return -2.0;
         }
     }
 

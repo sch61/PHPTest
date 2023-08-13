@@ -29,9 +29,13 @@ final class WalletTest extends TestCase
 
     public function testClassConstructor()
     {
-        $this->assertSame("Test", $this->wall->owner);
+        $this->assertSame("Test", $this->wall->getOwner());
     }
+    public function testgetOwner()
+    {
+        $this->assertSame('Test', $this->wall->getOwner());
 
+    }
     public function testgetCurrRate()
     {
         $this->assertSame(1.0, $this->wall->getCurrRate("CZK"));
@@ -96,14 +100,14 @@ final class WalletTest extends TestCase
         $this->assertSame(590.91, round($this->wall->getCurrValue("USD"), 2));
         $this->assertSame(700.0, round($this->wall->getCurrValue("EUR"), 2));
 
-        $this->assertSame(-1.0, round($this->wall->currencyExchange("USD", "CZK", 700.0), 2));
+        $this->assertSame(-2.0, round($this->wall->currencyExchange("USD", "CZK", 700.0), 2));
         $this->assertSame(590.91, round($this->wall->getCurrValue("USD"), 2));
         $this->assertSame(0.0, round($this->wall->getCurrValue("CZK"), 2));
 
         $this->assertSame(-1.0, round($this->wall->currencyExchange("USD", "RUB", 100), 2));
         $this->assertSame(590.91, round($this->wall->getCurrValue("USD"), 2));
 
-        $this->assertSame(-1.0, round($this->wall->currencyExchange("USD", "EUR", -1000.0), 2));
+        $this->assertSame(-2.0, round($this->wall->currencyExchange("USD", "EUR", -1000.0), 2));
         $this->assertSame(590.91, round($this->wall->getCurrValue("USD"), 2));
 
     }
@@ -115,7 +119,7 @@ final class WalletTest extends TestCase
 
         $this->assertSame(-1.0, round($this->wall->currencyExchange("USD", "RUB", 100), 2));
 
-        $this->assertSame(-1.0, round($this->wall->currencyExchange("USD", "EUR", -1000.0), 2));
+        $this->assertSame(-2.0, round($this->wall->currencyExchange("USD", "EUR", -1000.0), 2));
 
     }
 
